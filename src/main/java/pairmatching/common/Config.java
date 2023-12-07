@@ -2,6 +2,7 @@ package pairmatching.common;
 
 import pairmatching.controller.MainController;
 import pairmatching.domain.PairMatcher;
+import pairmatching.service.PairService;
 import pairmatching.view.InputView;
 import pairmatching.view.OutputView;
 import pairmatching.view.SpacerPrinter;
@@ -11,7 +12,7 @@ public final class Config {
     private final PairMatcher pairMatcher;
     private final InputView inputView;
     private final OutputView outputView;
-
+    private final PairService pairService;
     private final MainController mainController;
 
     public Config() {
@@ -19,7 +20,8 @@ public final class Config {
         final SpacerPrinter spacerPrinter = new SpacerPrinter();
         this.inputView = new InputView(spacerPrinter);
         this.outputView = new OutputView(spacerPrinter);
-        this.mainController = new MainController(inputView, outputView, pairMatcher);
+        this.pairService = new PairService(pairMatcher);
+        this.mainController = new MainController(inputView, outputView, pairService);
     }
 
     public MainController mainController() {

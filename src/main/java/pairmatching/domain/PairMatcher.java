@@ -3,8 +3,6 @@ package pairmatching.domain;
 import java.util.ArrayList;
 import java.util.List;
 import pairmatching.controller.dto.MatchRequestDto;
-import pairmatching.controller.dto.PairDto;
-import pairmatching.controller.dto.PairsDto;
 import pairmatching.domain.crew.Crew;
 import pairmatching.domain.crew.Crews;
 import pairmatching.domain.crew.Pair;
@@ -68,35 +66,4 @@ public final class PairMatcher {
         );
     }
 
-    public boolean hasMatchedData(final MatchRequestDto dto) {
-        final PairsDto result = findPairsByCondition(dto);
-        return !result.pairs().isEmpty();
-    }
-
-    public PairsDto findPairsByCondition(final MatchRequestDto dto) {
-        final List<PairDto> pairs = PairRepository.findPairsByCondition(dto).stream()
-                .map(Pair::toPairDto)
-                .toList();
-
-        return new PairsDto(pairs);
-    }
-
-    public PairsDto getPairsByCondition(final MatchRequestDto dto) {
-        final List<PairDto> pairs = PairRepository.findPairsByCondition(dto).stream()
-                .map(Pair::toPairDto)
-                .toList();
-
-        if (pairs.isEmpty()) {
-            throw new IllegalStateException("조건에 일치하는 페어가 존재하지 않습니다.");
-        }
-        return new PairsDto(pairs);
-    }
-
-    public void clearMatchedInfo(final MatchRequestDto dto) {
-        PairRepository.removeByCondition(dto.course(), dto.mission());
-    }
-
-    public void clearAllMatchedInfo() {
-        PairRepository.clear();
-    }
 }
