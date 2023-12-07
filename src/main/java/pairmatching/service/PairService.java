@@ -10,6 +10,8 @@ import pairmatching.domain.crew.Pair;
 
 public final class PairService {
 
+    private static final int MAX_TRY_COUNT = 3;
+
     private final PairMatcher pairMatcher;
 
     public PairService(final PairMatcher pairMatcher) {
@@ -17,7 +19,29 @@ public final class PairService {
     }
 
     public void match(final MatchRequestDto dto) {
-        pairMatcher.match(dto);
+        int tryCount = 0;
+
+        while (tryCount++ < MAX_TRY_COUNT) {
+            final boolean isOk = tryMatch(dto);
+
+            if (isOk) {
+                return;
+            }
+        }
+        throw new IllegalStateException("페어 매칭에 3회 실패하여 어플리케이션이 종료됩니다.");
+    }
+
+    private boolean tryMatch(final MatchRequestDto dto) {
+        final List<Pair> matchedPairs = pairMatcher.match(dto);
+        final boolean anyMatchedInSameLevel = PairRepository.anyMatchedInSameLevel(matchedPairs, dto.course(),
+                dto.level());
+        if (anyMatchedInSameLevel) {
+            return false;
+        }
+
+        PairRepository.savePairsByCourse(dto.course(), matchedPairs);
+
+        return true;
     }
 
     public PairsDto getPairsByCondition(final MatchRequestDto dto) {
@@ -52,4 +76,5 @@ public final class PairService {
         final PairsDto result = findPairsByCondition(dto);
         return !result.pairs().isEmpty();
     }
+
 }

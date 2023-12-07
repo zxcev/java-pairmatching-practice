@@ -57,8 +57,30 @@ public final class Pair {
         );
     }
 
-    public boolean containsAnyOf(final List<Crew> otherCrews) {
-        return crews.stream()
-                .anyMatch(otherCrews::contains);
+    public boolean containsSameCrew(final List<Pair> pairs) {
+        for (final Pair pair : pairs) {
+            final boolean containsSameCrews = pair.containsSameCrews(pair);
+            if (containsSameCrews) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean containsSameCrews(final Pair other) {
+        int matchedCount = 0;
+        for (final Crew crew : crews) {
+            if (other.containsCrew(crew)) {
+                matchedCount++;
+            }
+            if (matchedCount >= 2) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean containsCrew(final Crew crew) {
+        return crews.contains(crew);
     }
 }

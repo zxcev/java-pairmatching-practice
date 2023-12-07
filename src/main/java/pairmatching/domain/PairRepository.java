@@ -32,19 +32,19 @@ public final class PairRepository {
                 .toList();
     }
 
-    public static boolean isMatchedInSameLevel(
+    public static boolean anyMatchedInSameLevel(
+            final List<Pair> pairs,
             final Course course,
-            final Level level,
-            final Pair pair
+            final Level level
     ) {
-        final List<Pair> pairs = findPairsByCourse(course);
+        final List<Pair> allPairs = findPairsByCourse(course);
 
-        return pairs.stream()
+        return allPairs.stream()
                 .filter(p -> p.getLevel() == level)
-                .anyMatch(p -> p.containsAnyOf(pair.getCrews()));
+                .anyMatch(p -> p.containsSameCrew(pairs));
     }
 
-    public static void saveAllByCourse(
+    public static void savePairsByCourse(
             final Course course,
             final List<Pair> pairs
     ) {
