@@ -1,7 +1,6 @@
 package pairmatching.domain;
 
 import camp.nextstep.edu.missionutils.Randoms;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,21 +21,11 @@ public final class CrewRepository {
                 });
     }
 
-    public static List<Crew> findCrewsByCourse(final Course course) {
-        return Collections.unmodifiableList(
-                CREW_MAP_BY_COURSE.get(course)
-        );
-    }
-
     public static Crews findShuffledCrewsByCourse(final Course course) {
         final List<String> crewNames = findCrewNamesByCourse(course);
         final List<String> shuffledCrewNames = Randoms.shuffle(crewNames);
 
         return Crews.of(shuffledCrewNames);
-    }
-
-    private static List<String> toShuffleCrewNames(final List<String> crewNames) {
-        return Randoms.shuffle(crewNames);
     }
 
     private static List<String> findCrewNamesByCourse(final Course course) {

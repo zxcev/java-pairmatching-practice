@@ -3,7 +3,7 @@ package pairmatching.controller;
 import pairmatching.controller.dto.MatchRequestDto;
 import pairmatching.controller.dto.PairsDto;
 import pairmatching.domain.Feature;
-import pairmatching.domain.PairMatcher;
+import pairmatching.service.PairService;
 import pairmatching.view.InputView;
 import pairmatching.view.OutputView;
 
@@ -11,17 +11,16 @@ public final class MainController {
 
     private final InputView inputView;
     private final OutputView outputView;
-
-    private final PairMatcher pairMatcher;
+    private final PairService pairService;
 
     public MainController(
             final InputView inputView,
             final OutputView outputView,
-            final PairMatcher pairMatcher
+            final PairService pairService
     ) {
         this.inputView = inputView;
         this.outputView = outputView;
-        this.pairMatcher = pairMatcher;
+        this.pairService = pairService;
     }
 
     public void run() {
@@ -49,31 +48,31 @@ public final class MainController {
     private void match() {
         final MatchRequestDto dto = inputView.inputMatchRequestDto();
         doMatching(dto);
-        final PairsDto pairs = pairMatcher.findPairsByCondition(dto);
+        final PairsDto pairs = pairService.findPairsByCondition(dto);
         outputView.printPairs(pairs);
     }
 
     private void doMatching(final MatchRequestDto dto) {
-        if (pairMatcher.hasMatchedData(dto)) {
+        if (pairService.checkMatchedDataExistence(dto)) {
             final boolean refusedRematching = !inputView.inputRematch();
 
             if (refusedRematching) {
                 return;
             }
-            pairMatcher.clearMatchedInfo(dto);
+            pairService.clearMatchedInfo(dto);
         }
 
-        pairMatcher.match(dto);
+        pairService.match(dto);
     }
 
     private void query() {
         final MatchRequestDto dto = inputView.inputMatchRequestDto();
-        final PairsDto pairs = pairMatcher.getPairsByCondition(dto);
+        final PairsDto pairs = pairService.getPairsByCondition(dto);
         outputView.printPairs(pairs);
     }
 
     private void init() {
-        pairMatcher.clearAllMatchedInfo();
+        pairService.clearAllMatchedInfo();
         outputView.printInit();
     }
 
