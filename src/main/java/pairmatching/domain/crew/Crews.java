@@ -35,6 +35,9 @@ public final class Crews {
     }
 
     private Crew pick() {
+        if (crewNames.isEmpty()) {
+            throw new IllegalArgumentException("더 이상 뽑을 크루가 존재하지 않습니다.");
+        }
         return new Crew(crewNames.poll());
     }
 
