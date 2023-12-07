@@ -1,7 +1,11 @@
 package pairmatching;
 
-public class Application {
-    public static void main(String[] args) {
-        // TODO 구현 진행
+import pairmatching.common.Config;
+import pairmatching.controller.MainController;
+
+public final class Application {
+    public static void main(final String[] args) {
+        final MainController mainController = new Config().mainController();
+        mainController.run();
     }
 }
